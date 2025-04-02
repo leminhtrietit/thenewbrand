@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dt-input {
+    border: 1px solid #ccc;        /* Đổi màu và độ dày của đường viền */
+    padding: 8px 12px;             /* Điều chỉnh khoảng đệm bên trong */
+    border-radius: 4px;            /* Bo tròn góc */
+    font-size: 14px;               /* Kích thước chữ */
+    width: 200px;                  /* Chiều rộng cố định, có thể tùy chỉnh */
+    transition: border-color 0.3s; /* Hiệu ứng chuyển đổi màu viền khi focus */
+}
+
+/* Thay đổi màu viền khi người dùng focus vào ô input */
+.dt-input:focus {
+    border-color: #007bff;
+}
+
+/* Nếu muốn tùy chỉnh placeholder */
+.dt-input::placeholder {
+    color: #888;
+    font-style: italic;
+}

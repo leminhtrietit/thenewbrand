@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 729.39 347.48">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-2 {
+        fill: url(#linear-gradient-10);
+      }
+
+      .cls-3 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-4 {
+        fill: #3a54a5;
+        font-family: NeueEinstellung-Medium, 'Neue Einstellung';
+        font-size: 30.79px;
+        font-weight: 500;
+      }
+
+      .cls-5 {
+        fill: url(#linear-gradient-3);
+      }
+
+      .cls-6 {
+        fill: url(#linear-gradient-5);
+      }
+
+      .cls-7 {
+        fill: url(#linear-gradient-8);
+      }
+
+      .cls-8 {
+        fill: url(#linear-gradient-7);
+      }
+
+      .cls-9 {
+        fill: url(#linear-gradient-9);
+      }
+
+      .cls-10 {
+        fill: url(#linear-gradient-6);
+      }
+
+      .cls-11 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="18.88" y1="18.63" x2="190.63" y2="372.08" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#263b96"/>
+      <stop offset="1" stop-color="#1a0a41"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="324.94" y1="105.38" x2="453.43" y2="369.79" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-3" x1="362.45" y1="-6.95" x2="405.48" y2="81.6" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-4" x1="4.74" y1="79.98" x2="221.94" y2="192.45" gradientTransform="translate(-31.72 221.7) rotate(-90)" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-5" x1="597.36" y1="93.9" x2="799.81" y2="224.16" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-6" x1="593.28" y1="100.25" x2="795.72" y2="230.52" gradientTransform="translate(507.68 761.1) rotate(-90)" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-7" x1="19.1" y1="52.24" x2="236.3" y2="164.71" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-8" x1="189.98" y1="221.41" x2="316.15" y2="221.41" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-9" x1="147.39" y1="108.8" x2="291.48" y2="123.18" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-10" x1="431.01" y1="162.43" x2="649.52" y2="275.59" xlink:href="#linear-gradient"/>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <g>
+        <rect class="cls-11" x="62.34" y="0" width="63.82" height="347.48"/>
+        <rect class="cls-1" x="349.42" y="95.35" width="63.82" height="252.13"/>
+        <rect class="cls-5" x="349.42" width="63.82" height="63.82"/>
+        <rect class="cls-3" x="63.63" y="31.72" width="62.72" height="189.98" transform="translate(221.7 31.72) rotate(90)"/>
+        <rect class="cls-6" x="601.75" y="0" width="63.82" height="234.51"/>
+        <rect class="cls-10" x="603.03" y="31.72" width="62.72" height="189.98" transform="translate(761.1 -507.68) rotate(90)"/>
+        <path class="cls-8" d="M253.79,95.35v15.67c-34.49,19.13-58.87,54.27-63.14,95.39-.08.7-.14,1.42-.21,2.12-.06.72-.12,1.43-.16,2.15-.05.71-.1,1.43-.13,2.16-.04.71-.08,1.44-.1,2.16-.05,1.39-.08,2.77-.08,4.16v-123.8h63.81Z"/>
+        <path class="cls-7" d="M316.15,95.38v63.85c-.79-.04-1.58-.05-2.37-.05-1.62,0-3.24.07-4.83.19-30.61,2.44-54.75,27.87-55.15,59v129.11h-63.81v-128.33c0-1.39.02-2.77.08-4.16.02-.72.05-1.44.1-2.16.03-.73.08-1.44.13-2.16.04-.72.1-1.43.16-2.15.07-.7.13-1.42.21-2.12,4.18-41.19,28.6-76.41,63.14-95.58,17.78-9.87,38.22-15.48,59.98-15.48.79,0,1.58.01,2.37.03Z"/>
+        <rect class="cls-9" x="316.15" y="95.38" width="33.27" height="63.85"/>
+        <path class="cls-2" d="M509.04,188.21h83.13c-10.52-17.02-29.34-28.36-50.83-28.36-32.98,0-59.72,26.73-59.72,59.72s26.73,59.72,59.72,59.72c21.48,0,40.31-11.34,50.83-28.36l46.2,46.2c-22.76,28.45-57.77,46.67-97.02,46.67-68.61,0-124.22-55.62-124.22-124.22s55.61-124.22,124.22-124.22c57.77,0,106.33,39.44,120.23,92.87,2.61,10.02,4,20.53,4,31.36,0,5.06-.3,10.03-.89,14.94h-155.64v-46.3Z"/>
+      </g>
+      <text class="cls-4" transform="translate(138.26 43.23)"><tspan x="0" y="0">LE MINH TRIET</tspan></text>
+    </g>
+  </g>
+</svg>

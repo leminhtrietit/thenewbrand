@@ -1,0 +1,193 @@
+* {
+    font-family: "Poppins";
+}
+
+body {
+    background: #FFA17F;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #00223E, #FFA17F);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #ffffff, #ffffff);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow-y: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    align-items: center;
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    border-radius: 30px;
+    box-shadow: 0 0 2em #283685;
+    gap: 2em;
+    background: #16222A;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #34049cff, #b36c9e31);
+    /* Chrome 10-25, Safari 5.1-6 */
+    /* background: linear-gradient(to right, #34049cff, #c92d68); */
+    background: linear-gradient(to bottom, #d80084, #0c375e);
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+.login-container .logo {
+    margin-top: 1em;
+    margin-bottom: 5em;
+}
+
+.login-container .email {
+    background: white;
+    box-shadow: 0 0 0.75em #626363;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    border-radius: 20px;
+    color: #4d4d4d;
+    margin-top: -3em;
+}
+
+.login-container .email input {
+    outline: none;
+    border: none;
+}
+
+.login-container .email input::-moz-placeholder {
+    color: black;
+    font-size: 0.9em;
+}
+
+.login-container .email input:-ms-input-placeholder {
+    color: black;
+    font-size: 0.9em;
+}
+
+.login-container .email input::placeholder {
+    color: black;
+    font-size: 0.9em;
+}
+
+.login-container .email img {
+    color: #4d4d4d;
+    margin-bottom: -0.4em;
+}
+
+.login-container .password {
+    background: white;
+    box-shadow: 0 0 0.75em #626363;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    border-radius: 20px;
+    color: #4d4d4d;
+    margin-top: 15px;
+}
+
+.login-container .password input {
+    outline: none;
+    border: none;
+}
+
+.login-container .password input::-moz-placeholder {
+    color: black;
+    font-size: 0.9em;
+}
+
+.login-container .password input:-ms-input-placeholder {
+    color: black;
+    font-size: 0.9em;
+}
+
+.login-container .password input::placeholder {
+    color: black;
+    font-size: 0.9em;
+}
+
+.login-container .password img {
+    color: #4d4d4d;
+    margin-bottom: -0.4em;
+}
+
+.login-container .password .show-hide {
+    margin-right: -5em;
+    cursor: pointer;
+}
+
+
+
+.login-container .login {
+    width: 100%;
+    padding: 1em;
+    background: #3e4684;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.login-container .other-login-method {
+    margin-top: 1em;
+}
+
+.login-container .footer {
+    display: flex;
+    font-size: 0.7em;
+    color: #979191;
+    gap: 14em;
+    padding-bottom: 10em;
+}
+
+.login-container .footer span {
+    cursor: pointer;
+}
+
+button {
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    font-weight: 200;
+    font-style: italic;
+    font-size: small;
+    color: #e6e9f9;
+}
+
+.container-scroller {
+    \n overflow: hidden;
+    \n
+}
+
+\n\npre {
+    \n background: color(gray-lighter);
+    \n padding: 15px;
+    \n font-size: 14px;
+    \n
+}
+
+\n\ncode {
+    \n padding: 5px;
+    \n color: $danger;
+    \n font-family: $type1;
+    \n font-weight: 300;
+    \n font-size: $default-font-size;
+    \n border-radius: 4px;
+    \n
+}
+
+\n
