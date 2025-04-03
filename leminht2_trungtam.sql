@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.1deb3
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th2 28, 2025 lúc 08:09 AM
--- Phiên bản máy phục vụ: 10.4.32-MariaDB
--- Phiên bản PHP: 8.2.12
+-- Máy chủ: localhost:3306
+-- Thời gian đã tạo: Th4 03, 2025 lúc 02:29 AM
+-- Phiên bản máy phục vụ: 8.0.41-0ubuntu0.24.04.1
+-- Phiên bản PHP: 8.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,18 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `cache` (
-  `key` varchar(255) NOT NULL,
-  `value` mediumtext NOT NULL,
-  `expiration` int(11) NOT NULL
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('livewire-rate-limiter:a17961fa74e9275d529f489537f179c05d50c2f3', 'i:1;', 1740723006),
-('livewire-rate-limiter:a17961fa74e9275d529f489537f179c05d50c2f3:timer', 'i:1740723006;', 1740723006);
 
 -- --------------------------------------------------------
 
@@ -48,25 +40,9 @@ INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 --
 
 CREATE TABLE `cache_locks` (
-  `key` varchar(255) NOT NULL,
-  `owner` varchar(255) NOT NULL,
-  `expiration` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `coursefees`
---
-
-CREATE TABLE `coursefees` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `course_id` bigint(20) UNSIGNED NOT NULL,
-  `total_fee` decimal(20,0) NOT NULL,
-  `discount` decimal(20,0) NOT NULL DEFAULT 0,
-  `gift` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -76,11 +52,17 @@ CREATE TABLE `coursefees` (
 --
 
 CREATE TABLE `courses` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `course_code` varchar(255) DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `subject_id` bigint(20) UNSIGNED NOT NULL,
-  `status` enum('errolled','in_process','cancelled','pausing','completed') NOT NULL DEFAULT 'errolled',
+  `id` bigint UNSIGNED NOT NULL,
+  `course_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_id` bigint UNSIGNED NOT NULL,
+  `subject_id` bigint UNSIGNED NOT NULL,
+  `status` enum('errolled','in_process','cancelled','pausing','completed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'errolled',
+  `enrollment_date` date DEFAULT NULL COMMENT 'Ngày đăng ký khóa học',
+  `base_fee` decimal(15,0) NOT NULL DEFAULT '0' COMMENT 'Học phí gốc tại thời điểm đăng ký',
+  `discount_amount` decimal(15,0) NOT NULL DEFAULT '0' COMMENT 'Số tiền giảm giá áp dụng',
+  `final_amount` decimal(15,0) NOT NULL DEFAULT '0' COMMENT 'Số tiền thực tế cần thu (base_fee - discount_amount)',
+  `gift` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Mô tả quà tặng kèm (nếu có)',
+  `payment_status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'unpaid' COMMENT 'Trạng thái thanh toán (vd: unpaid, paid, partially_paid)',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -89,8 +71,9 @@ CREATE TABLE `courses` (
 -- Đang đổ dữ liệu cho bảng `courses`
 --
 
-INSERT INTO `courses` (`id`, `course_code`, `user_id`, `subject_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, NULL, 1, 4, 'errolled', '2025-02-16 22:07:14', '2025-02-16 22:07:14');
+INSERT INTO `courses` (`id`, `course_code`, `user_id`, `subject_id`, `status`, `enrollment_date`, `base_fee`, `discount_amount`, `final_amount`, `gift`, `payment_status`, `created_at`, `updated_at`) VALUES
+(1, NULL, 1, 4, 'errolled', NULL, 0, 0, 0, NULL, 'unpaid', '2025-02-16 22:07:14', '2025-02-16 22:07:14'),
+(3, NULL, 1, 4, 'errolled', NULL, 0, 0, 0, NULL, 'unpaid', '2025-04-01 10:48:43', '2025-04-01 10:48:43');
 
 -- --------------------------------------------------------
 
@@ -99,8 +82,8 @@ INSERT INTO `courses` (`id`, `course_code`, `user_id`, `subject_id`, `status`, `
 --
 
 CREATE TABLE `departments` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -119,17 +102,38 @@ INSERT INTO `departments` (`id`, `name`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `enrollments`
+--
+
+CREATE TABLE `enrollments` (
+  `id` bigint UNSIGNED NOT NULL,
+  `personal_info_id` bigint UNSIGNED NOT NULL,
+  `course_id` bigint UNSIGNED NOT NULL,
+  `enrollment_date` date NOT NULL,
+  `base_fee` decimal(15,2) NOT NULL DEFAULT '0.00',
+  `discount_amount` decimal(15,2) NOT NULL DEFAULT '0.00',
+  `final_amount` decimal(15,2) NOT NULL DEFAULT '0.00',
+  `gift` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `payment_status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'unpaid',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `id` bigint UNSIGNED NOT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -139,14 +143,21 @@ CREATE TABLE `failed_jobs` (
 --
 
 CREATE TABLE `jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `queue` varchar(255) NOT NULL,
-  `payload` longtext NOT NULL,
-  `attempts` tinyint(3) UNSIGNED NOT NULL,
-  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
-  `available_at` int(10) UNSIGNED NOT NULL,
-  `created_at` int(10) UNSIGNED NOT NULL
+  `id` bigint UNSIGNED NOT NULL,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint UNSIGNED NOT NULL,
+  `reserved_at` int UNSIGNED DEFAULT NULL,
+  `available_at` int UNSIGNED NOT NULL,
+  `created_at` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `jobs`
+--
+
+INSERT INTO `jobs` (`id`, `queue`, `payload`, `attempts`, `reserved_at`, `available_at`, `created_at`) VALUES
+(1, 'default', '{\"uuid\":\"7166b9bc-e91a-45d7-a0a2-f49afcfc8ba3\",\"displayName\":\"Filament\\\\Notifications\\\\DatabaseNotification\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Notifications\\\\SendQueuedNotifications\",\"command\":\"O:48:\\\"Illuminate\\\\Notifications\\\\SendQueuedNotifications\\\":3:{s:11:\\\"notifiables\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:15:\\\"App\\\\Models\\\\User\\\";s:2:\\\"id\\\";a:1:{i:0;i:1;}s:9:\\\"relations\\\";a:0:{}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:12:\\\"notification\\\";O:43:\\\"Filament\\\\Notifications\\\\DatabaseNotification\\\":2:{s:4:\\\"data\\\";a:11:{s:7:\\\"actions\\\";a:0:{}s:4:\\\"body\\\";s:75:\\\"Mật khẩu tạm thời cho trungta4444mtinhocsaoviet@gmail.com: BPIcJELl\\\";s:5:\\\"color\\\";N;s:8:\\\"duration\\\";s:10:\\\"persistent\\\";s:4:\\\"icon\\\";s:29:\\\"heroicon-o-information-circle\\\";s:9:\\\"iconColor\\\";s:4:\\\"info\\\";s:6:\\\"status\\\";s:4:\\\"info\\\";s:5:\\\"title\\\";s:34:\\\"Đã tạo tài khoản User mới\\\";s:4:\\\"view\\\";s:36:\\\"filament-notifications::notification\\\";s:8:\\\"viewData\\\";a:0:{}s:6:\\\"format\\\";s:8:\\\"filament\\\";}s:2:\\\"id\\\";s:36:\\\"be49edaa-6539-42ee-a611-b15eff557979\\\";}s:8:\\\"channels\\\";a:1:{i:0;s:8:\\\"database\\\";}}\"}}', 0, NULL, 1743593849, 1743593849);
 
 -- --------------------------------------------------------
 
@@ -155,16 +166,16 @@ CREATE TABLE `jobs` (
 --
 
 CREATE TABLE `job_batches` (
-  `id` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `total_jobs` int(11) NOT NULL,
-  `pending_jobs` int(11) NOT NULL,
-  `failed_jobs` int(11) NOT NULL,
-  `failed_job_ids` longtext NOT NULL,
-  `options` mediumtext DEFAULT NULL,
-  `cancelled_at` int(11) DEFAULT NULL,
-  `created_at` int(11) NOT NULL,
-  `finished_at` int(11) DEFAULT NULL
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_jobs` int NOT NULL,
+  `pending_jobs` int NOT NULL,
+  `failed_jobs` int NOT NULL,
+  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `cancelled_at` int DEFAULT NULL,
+  `created_at` int NOT NULL,
+  `finished_at` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -174,9 +185,9 @@ CREATE TABLE `job_batches` (
 --
 
 CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) NOT NULL,
-  `batch` int(11) NOT NULL
+  `id` int UNSIGNED NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -193,7 +204,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (7, '2025_02_16_140921_create_courses_table', 4),
 (8, '2025_02_17_051701_create_coursesfees_table', 5),
 (9, '2025_02_17_051926_create_payments_table', 6),
-(10, '2025_02_22_073241_create_resource_table', 7);
+(10, '2025_02_22_073241_create_resource_table', 7),
+(11, '2025_04_02_133024_create_enrollments_table', 8),
+(12, '2025_04_02_144552_add_enrollment_details_to_courses_table', 8);
 
 -- --------------------------------------------------------
 
@@ -202,8 +215,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `password_reset_tokens` (
-  `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -214,12 +227,12 @@ CREATE TABLE `password_reset_tokens` (
 --
 
 CREATE TABLE `payments` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `course_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `course_id` bigint UNSIGNED NOT NULL,
   `payment_amount` decimal(20,0) NOT NULL,
   `payment_date` datetime NOT NULL,
-  `payment_method` varchar(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
+  `payment_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `note` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -231,25 +244,26 @@ CREATE TABLE `payments` (
 --
 
 CREATE TABLE `personal_infos` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `identitynumber` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `identitynumber` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `dateofbirth` date DEFAULT NULL,
-  `phone` varchar(255) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `placeofbirth` varchar(255) DEFAULT NULL,
-  `gender` enum('Nam','Nữ') NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `placeofbirth` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gender` enum('Nam','Nữ') COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `personal_infos`
 --
 
-INSERT INTO `personal_infos` (`id`, `identitynumber`, `name`, `dateofbirth`, `phone`, `email`, `address`, `placeofbirth`, `gender`, `created_at`, `updated_at`) VALUES
-(1, '080201001657', 'Lê Minh Triết', NULL, '0946426536', 'minhtrietofficial@gmail.com', 'Số 92, Lê Văn Lương, Tân Phong, Quận 7, Hồ Chí Minh', 'Lâm Đồng', 'Nam', '2025-02-16 06:56:07', '2025-02-16 20:21:36');
+INSERT INTO `personal_infos` (`id`, `identitynumber`, `name`, `dateofbirth`, `phone`, `email`, `address`, `placeofbirth`, `gender`, `created_at`, `updated_at`, `user_id`) VALUES
+(1, '080201001657', 'Lê Minh Triết', NULL, '0946426536', 'minhtrietofficial@gmail.com', 'Số 92, Lê Văn Lương, Tân Phong, Quận 7, Hồ Chí Minh', 'Lâm Đồng', 'Nam', '2025-02-16 06:56:07', '2025-02-16 20:21:36', 1);
 
 -- --------------------------------------------------------
 
@@ -258,12 +272,12 @@ INSERT INTO `personal_infos` (`id`, `identitynumber`, `name`, `dateofbirth`, `ph
 --
 
 CREATE TABLE `resources` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `appname` varchar(255) NOT NULL,
-  `version` varchar(255) DEFAULT NULL,
-  `link_truycap` varchar(255) NOT NULL,
-  `ten_hanhdong` varchar(255) NOT NULL,
-  `trangthai_link` tinyint(1) NOT NULL DEFAULT 1,
+  `id` bigint UNSIGNED NOT NULL,
+  `appname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `version` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `link_truycap` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ten_hanhdong` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `trangthai_link` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -300,12 +314,12 @@ INSERT INTO `resources` (`id`, `appname`, `version`, `link_truycap`, `ten_hanhdo
 --
 
 CREATE TABLE `sessions` (
-  `id` varchar(255) NOT NULL,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `ip_address` varchar(45) DEFAULT NULL,
-  `user_agent` text DEFAULT NULL,
-  `payload` longtext NOT NULL,
-  `last_activity` int(11) NOT NULL
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -313,9 +327,11 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('agREVVtoRdd1Omu5RqLksckUSrbus42nr6bFr8aD', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'YTo4OntzOjY6Il90b2tlbiI7czo0MDoicmMySzhXUGFzckFuWVlpSFVLa3FwbnBFS0tJaFZraDdvNDhMWllZNiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjA6e31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTc6InBhc3N3b3JkX2hhc2hfd2ViIjtzOjYwOiIkMnkkMTIkSlhxLi90SjltakV0SFJKYW1MSlFmdUljVDA2L01HdEVIZ3lWUmUuU1d5QXVOVHlVdE1xUkciO3M6ODoiZmlsYW1lbnQiO2E6MDp7fXM6NjoidGFibGVzIjthOjE6e3M6MjI6Ikxpc3RSZXNvdXJjZXNfcGVyX3BhZ2UiO3M6MjoiMTAiO319', 1740219170),
-('quSfcwwRy9LbjdmeRUrE7Sb0q1GbNONjdJ2ey0By', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiUzlwNVh4V2Y2WGt0ZEVSdEJON2RPRkh0b0FhSVdTVEFZYVJjcDNrMyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjA6e31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MTc6InBhc3N3b3JkX2hhc2hfd2ViIjtzOjYwOiIkMnkkMTIkSlhxLi90SjltakV0SFJKYW1MSlFmdUljVDA2L01HdEVIZ3lWUmUuU1d5QXVOVHlVdE1xUkciO30=', 1740722947),
-('U5JTw3lrxSXkGIdJOB1mu0bNK1WFl5l9WU9rZo3G', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZmQ2RWRBYWRBdDJ1M0FEWG9SaG16TW82TTJGSTZ4dWgxZ3JSc0hTTiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1740219129);
+('5frbz8wygHsG0Z0mrQmUtyLkg7JFt4PpHKEOI6Us', 1, '192.168.1.22', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiTUtKVWt0Y1Q5SVlQY25SNGxwelFRNFNsS05kQ1BlUWUyNTdMazNVSCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly8xOTIuMTY4LjEuMjo4MDAwL2FkbWluL3JlZ2lzdGVyLWNvdXJzZSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoxNzoicGFzc3dvcmRfaGFzaF93ZWIiO3M6NjA6IiQyeSQxMiRKWHEuL3RKOW1qRXRIUkphbUxKUWZ1SWNUMDYvTUd0RUhneVZSZS5TV3lBdU5UeVV0TXFSRyI7czo4OiJmaWxhbWVudCI7YTowOnt9fQ==', 1743607231),
+('bEtrfdKZGqEhUkhyAxPQSzTHKpaideAi8s3krZxs', NULL, '109.205.213.198', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36 Edg/90.0.818.46', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiTExVdElhVjlncjk1bk9YMmttaWhlb2FWbmtBSTZuNmNpSUl4ZHZUNiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1743610490),
+('I5KY3ohVjuAmXJX6momGgDudAEy0KQr7gVibP3Dm', NULL, '179.43.175.246', 'Hello World/1.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieWtkMjZHeWo2MFVLa2JJUnZJNkNWSGx1VVcyWHYyZU9SVG9iQmloRCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjQ6Imh0dHA6Ly8xNC4xODYuODQuMzY6ODAwMCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1743609254),
+('KozTdvjF7nQD6G8N93S8hzSf3CtvKNXz7IiZEEoM', 1, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36', 'YTo3OntzOjY6Il90b2tlbiI7czo0MDoiNk1rbEFTV0tIY25RZzNRTHRpSU0xQXhrS01YVG15R0lvNGxLdzJzayI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9yZWdpc3Rlci1jb3Vyc2UiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjM6InVybCI7YTowOnt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjE3OiJwYXNzd29yZF9oYXNoX3dlYiI7czo2MDoiJDJ5JDEyJEpYcS4vdEo5bWpFdEhSSmFtTEpRZnVJY1QwNi9NR3RFSGd5VlJlLlNXeUF1TlR5VXRNcVJHIjtzOjg6ImZpbGFtZW50IjthOjA6e319', 1743612251),
+('mRPTE953F7BTzBUsu9f7RrskVwZpBOg0eVNPu5nn', NULL, '114.35.42.104', 'curl/7.88.1', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiOXdwcEpxUHZPZk4wMW5SOVJKRzA5ZWFVeDB0T3ZZTm9pQnBZamRwdCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjQ6Imh0dHA6Ly8xNC4xODYuODQuMzY6ODAwMCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1743610056);
 
 -- --------------------------------------------------------
 
@@ -324,9 +340,9 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 --
 
 CREATE TABLE `subjects` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `department_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `department_id` bigint UNSIGNED NOT NULL,
   `price` decimal(20,0) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -342,7 +358,8 @@ INSERT INTO `subjects` (`id`, `name`, `department_id`, `price`, `created_at`, `u
 (3, 'Nguyên lý kế toán', 2, 3000000, '2025-02-16 06:12:32', '2025-02-21 03:18:00'),
 (4, 'Đồ họa Photoshop', 3, 2000000, '2025-02-16 06:12:32', '2025-02-16 06:12:32'),
 (5, 'Vẽ kỹ thuật cơ bản', 4, 1800000, '2025-02-16 06:12:32', '2025-02-16 06:12:32'),
-(6, 'Lập trình PHP', 5, 2500000, '2025-02-16 06:12:32', '2025-02-16 06:12:32');
+(6, 'Lập trình PHP', 5, 2500000, '2025-02-16 06:12:32', '2025-02-16 06:12:32'),
+(7, 'Cơ sở dữ liệu SQL', 5, 3500000, '2025-04-01 10:31:06', '2025-04-01 10:31:06');
 
 -- --------------------------------------------------------
 
@@ -351,12 +368,12 @@ INSERT INTO `subjects` (`id`, `name`, `department_id`, `price`, `created_at`, `u
 --
 
 CREATE TABLE `users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(12) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) NOT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -366,7 +383,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, '080201001657', 'minhtrietofficial@gmail.com', NULL, '$2y$12$JXq./tJ9mjEtHRJamLJQfuIcT06/MGtEHgyVRe.SWyAuNTyUtMqRG', 'dDazwb6djV2mxGID8zhV0goIYwXoIxmIjudR5l0YWq74CE52DtDCi77TPqGb', '2025-02-16 05:29:10', '2025-02-16 05:29:10');
+(1, '080201001657', 'minhtrietofficial@gmail.com', NULL, '$2y$12$JXq./tJ9mjEtHRJamLJQfuIcT06/MGtEHgyVRe.SWyAuNTyUtMqRG', '7NJpcpC6o8GZvsjiWNILvX1JN5zsMi4btrGBJhMRiTVacl9W6kKZzDLcm7UH', '2025-02-16 05:29:10', '2025-02-16 05:29:10');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -385,13 +402,6 @@ ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`);
 
 --
--- Chỉ mục cho bảng `coursefees`
---
-ALTER TABLE `coursefees`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `course_fees_course_id_foreign` (`course_id`);
-
---
 -- Chỉ mục cho bảng `courses`
 --
 ALTER TABLE `courses`
@@ -406,6 +416,14 @@ ALTER TABLE `courses`
 ALTER TABLE `departments`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `departments_name_unique` (`name`);
+
+--
+-- Chỉ mục cho bảng `enrollments`
+--
+ALTER TABLE `enrollments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `enrollments_personal_info_id_foreign` (`personal_info_id`),
+  ADD KEY `enrollments_course_id_foreign` (`course_id`);
 
 --
 -- Chỉ mục cho bảng `failed_jobs`
@@ -451,7 +469,8 @@ ALTER TABLE `payments`
 --
 ALTER TABLE `personal_infos`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `personal_infos_identitynumber_unique` (`identitynumber`);
+  ADD UNIQUE KEY `personal_infos_identitynumber_unique` (`identitynumber`),
+  ADD KEY `fk_personal_infos_users` (`user_id`);
 
 --
 -- Chỉ mục cho bảng `resources`
@@ -480,87 +499,82 @@ ALTER TABLE `subjects`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`),
-  ADD UNIQUE KEY `identitynumber` (`name`);
+  ADD UNIQUE KEY `identitynumber` (`name`),
+  ADD UNIQUE KEY `unique_name` (`name`);
 
 --
 -- AUTO_INCREMENT cho các bảng đã đổ
 --
 
 --
--- AUTO_INCREMENT cho bảng `coursefees`
---
-ALTER TABLE `coursefees`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT cho bảng `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `enrollments`
+--
+ALTER TABLE `enrollments`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `personal_infos`
 --
 ALTER TABLE `personal_infos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT cho bảng `resources`
 --
 ALTER TABLE `resources`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT cho bảng `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
 --
-
---
--- Các ràng buộc cho bảng `coursefees`
---
-ALTER TABLE `coursefees`
-  ADD CONSTRAINT `course_fees_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `courses`
@@ -570,10 +584,23 @@ ALTER TABLE `courses`
   ADD CONSTRAINT `courses_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Các ràng buộc cho bảng `enrollments`
+--
+ALTER TABLE `enrollments`
+  ADD CONSTRAINT `enrollments_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `enrollments_personal_info_id_foreign` FOREIGN KEY (`personal_info_id`) REFERENCES `personal_infos` (`id`) ON DELETE CASCADE;
+
+--
 -- Các ràng buộc cho bảng `payments`
 --
 ALTER TABLE `payments`
   ADD CONSTRAINT `payments_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `personal_infos`
+--
+ALTER TABLE `personal_infos`
+  ADD CONSTRAINT `fk_personal_infos_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Các ràng buộc cho bảng `subjects`
